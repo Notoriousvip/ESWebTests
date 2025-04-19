@@ -7,16 +7,20 @@ from selenium.webdriver.common.by import By
 class LoginPageLocators:
     LOGIN_FIELD = (By.ID, 'field_email')
     LOGIN_BUTTON = (By.XPATH, '//*[@data-l="t,sign_in"]')
-    UPPER_ENTRANCE_BUTTON = (By.XPATH, '//*[@data-l="t,login_tab"]')
-    UPPER_QRCODE_BUTTON = (By.XPATH, '//*[@data-l="t,qr_tab"]')
+    LOGIN_TAB = (By.XPATH, '//*[@data-l="t,login_tab"]')
+    QR_TAB = (By.XPATH, '//*[@data-l="t,qr_tab"]')
     PASSWORD_FIELD = (By.ID, 'field_password')
-    LOGIN_BY_QRCODE_BUTTON = (By.XPATH, '//*[@data-l="t,get_qr"]')
-    CANNOT_LOGIN_BUTTON = (By.XPATH, '//*[@data-l="t,restore"]')
-    REGISTER_BUTTON = (By.XPATH, '//div[@class="external-oauth-login-footer"]/a[@data-l="t,register"]')
-    LOGIN_THROUGH_VK = (By.XPATH, '//*[@class="i ic social-icon __s __vk_id"]')
-    LOGIN_THROUGH_MAILRU = (By.XPATH, '//*[@class="i ic social-icon __s __mailru"]')
-    LOGIN_THROUGH_YANDEX = (By.XPATH, '//*[@class="i ic social-icon __s __yandex"]')
+    LOGIN_BY_QR_CODE = (By.XPATH, '//*[@data-l="t,get_qr"]')
+    RESTORE_LINK = (By.XPATH, '//*[@data-l="t,restore"]')
+    REGISTRATION_BUTTON = (By.XPATH, '//div[@class="external-oauth-login-footer"]/a[@data-l="t,register"]')
+    VK_BUTTON = (By.XPATH, '//*[@data-l="t,vkc"]')
+    MAIL_BUTTON = (By.XPATH, '//*[@data-l="t,mailru"]')
+    YANDEX_BUTTON = (By.XPATH, '//*[@data-l="t,yandex"]')
+    OTHER_BUTTON = (By.XPATH, '//*[@data-l="t-other"]')
     ERROR_TEXT = (By.XPATH, '//*[@class="input-e login_error"]')
+    GO_BACK_BUTTON = (By.XPATH, '//*[@data-l="t,cancel"]')
+    SUPPORT_BUTTON = (By.XPATH, '//*[@class="external-oauth-login-help portlet f"]')
+    PROFILE_RECOVERY_BUTTON = (By.NAME, 'st.go_to_recovery')
 
 
 class LoginPageHelper(BasePage):
@@ -26,17 +30,19 @@ class LoginPageHelper(BasePage):
 
     @allure.step('Проверяем элементы на главной странице')
     def check_page(self):
+        with allure.step("Проверяем корректность загрузки страницы"):
+            self.attach_screenshot()
         self.find_element(LoginPageLocators.LOGIN_FIELD)
         self.find_element(LoginPageLocators.LOGIN_BUTTON)
-        self.find_element(LoginPageLocators.UPPER_ENTRANCE_BUTTON)
-        self.find_element(LoginPageLocators.UPPER_QRCODE_BUTTON)
+        self.find_element(LoginPageLocators.LOGIN_TAB)
+        self.find_element(LoginPageLocators.QR_TAB)
         self.find_element(LoginPageLocators.PASSWORD_FIELD)
-        self.find_element(LoginPageLocators.LOGIN_BY_QRCODE_BUTTON)
-        self.find_element(LoginPageLocators.CANNOT_LOGIN_BUTTON)
-        self.find_element(LoginPageLocators.REGISTER_BUTTON)
-        self.find_element(LoginPageLocators.LOGIN_THROUGH_VK)
-        self.find_element(LoginPageLocators.LOGIN_THROUGH_MAILRU)
-        self.find_element(LoginPageLocators.LOGIN_THROUGH_YANDEX)
+        self.find_element(LoginPageLocators.LOGIN_BY_QR_CODE)
+        self.find_element(LoginPageLocators.RESTORE_LINK)
+        self.find_element(LoginPageLocators.REGISTRATION_BUTTON)
+        self.find_element(LoginPageLocators.VK_BUTTON)
+        self.find_element(LoginPageLocators.MAIL_BUTTON)
+        self.find_element(LoginPageLocators.YANDEX_BUTTON)
 
     @allure.step('Нажимаем на кнопку "Войти"')
     def click_login(self):
@@ -47,3 +53,18 @@ class LoginPageHelper(BasePage):
     def get_error_text(self):
         self.attach_screenshot()
         return self.find_element(LoginPageLocators.ERROR_TEXT).text
+
+    @allure.step('Заполняем поле логин')
+    def type_login(self, login):
+        self.find_element(LoginPageLocators.LOGIN_FIELD).send_keys(login)
+        self.attach_screenshot()
+
+    @allure.step('Заполняем поле пароль')
+    def type_password(self, password):
+        self.find_element(LoginPageLocators.PASSWORD_FIELD).send_keys(password)
+        self.attach_screenshot()
+
+    @allure.step('Переходим к восстановлению')
+    def click_recovery(self):
+        self.attach_screenshot()
+        self.find_element(LoginPageLocators.PROFILE_RECOVERY_BUTTON).click()
